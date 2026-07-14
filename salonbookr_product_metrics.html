@@ -1,0 +1,376 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.page{padding:1.5rem 0;display:flex;flex-direction:column;gap:2rem}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:.75rem}
+.ns-card{background:var(--surface-1);border-radius:12px;border:0.5px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:.5rem}
+.ns-eyebrow{font-size:12px;color:var(--text-muted);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.ns-metric{font-size:42px;font-weight:500;color:var(--text-primary);line-height:1;font-family:var(--font-voice)}
+.ns-sub{font-size:14px;color:var(--text-secondary)}
+.ns-delta{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:500;padding:3px 10px;border-radius:20px;margin-top:.25rem}
+.delta-down{background:var(--bg-success);color:var(--text-success)}
+.delta-up{background:var(--bg-danger);color:var(--text-danger)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi-card{background:var(--surface-1);border-radius:12px;border:0.5px solid var(--border);padding:1rem}
+.kpi-label{font-size:12px;color:var(--text-muted);margin-bottom:.5rem;line-height:1.4}
+.kpi-val{font-size:24px;font-weight:500;color:var(--text-primary);line-height:1}
+.kpi-target{font-size:11px;color:var(--text-secondary);margin-top:.25rem}
+.kpi-bar{height:4px;border-radius:2px;background:var(--border-strong);margin-top:.5rem;overflow:hidden}
+.kpi-fill{height:100%;border-radius:2px;transition:width .3s}
+.fill-blue{background:#2a78d6}
+.fill-teal{background:#1baf7a}
+.fill-amber{background:#eda100}
+.fill-violet{background:#4a3aa7}
+.fill-coral{background:#e34948}
+.feature-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.f-card{background:var(--surface-1);border-radius:12px;border:0.5px solid var(--border);padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+.f-header{display:flex;align-items:center;gap:8px}
+.f-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.fi-blue{background:var(--bg-accent);color:var(--text-accent)}
+.fi-teal{background:var(--bg-success);color:var(--text-success)}
+.fi-amber{background:var(--bg-warning);color:var(--text-warning)}
+.f-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.f-metric-row{display:flex;flex-direction:column;gap:4px}
+.f-metric-label{font-size:11px;color:var(--text-muted)}
+.f-metric-val{font-size:18px;font-weight:500;color:var(--text-primary)}
+.f-target{font-size:11px;color:var(--text-secondary)}
+.divider{height:0.5px;background:var(--border);margin:.25rem 0}
+.funnel-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:end}
+.funnel-step{display:flex;flex-direction:column;align-items:center;gap:6px}
+.funnel-bar-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px}
+.funnel-bar{width:100%;border-radius:6px 6px 0 0;transition:height .3s}
+.funnel-pct{font-size:13px;font-weight:500;color:var(--text-primary)}
+.funnel-label{font-size:11px;color:var(--text-muted);text-align:center;line-height:1.3}
+.funnel-arrow{font-size:16px;color:var(--text-muted);align-self:center;margin-bottom:24px}
+.risk-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.risk-card{background:var(--surface-1);border:0.5px solid var(--border);border-radius:12px;padding:.875rem 1rem;display:flex;gap:.75rem;align-items:flex-start}
+.risk-icon{font-size:16px;flex-shrink:0;margin-top:2px}
+.risk-title{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:2px}
+.risk-desc{font-size:12px;color:var(--text-secondary);line-height:1.4}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;margin-bottom:4px}
+.badge-danger{background:var(--bg-danger);color:var(--text-danger)}
+.badge-warning{background:var(--bg-warning);color:var(--text-warning)}
+.badge-success{background:var(--bg-success);color:var(--text-success)}
+.tabs{display:flex;gap:4px;margin-bottom:1rem;background:var(--surface-1);padding:3px;border-radius:8px;border:0.5px solid var(--border);width:fit-content}
+.tab{font-size:12px;padding:5px 14px;border-radius:6px;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-family:var(--font-sans)}
+.tab.active{background:var(--surface-2);color:var(--text-primary);font-weight:500;border:0.5px solid var(--border)}
+.panel{display:none}.panel.active{display:block}
+.timeline-row{display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;padding:.5rem 0;border-bottom:0.5px solid var(--border)}
+.timeline-row:last-child{border-bottom:none}
+.t-period{font-size:12px;color:var(--text-muted);font-weight:500}
+.t-events{display:flex;flex-wrap:wrap;gap:6px}
+.t-event{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--surface-0);border:0.5px solid var(--border);color:var(--text-secondary)}
+</style>
+
+<div class="page">
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">SalonBookr No-Show Reduction Initiative — Product Metrics Dashboard covering North Star, primary KPIs, feature metrics, funnel, drop-off indicators, and risks</h2>
+
+<div>
+  <div class="section-label">North Star Metric</div>
+  <div class="ns-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+      <div>
+        <div class="ns-eyebrow">Primary success measure</div>
+        <div class="ns-metric">No-show rate</div>
+        <div class="ns-sub" style="margin-top:.5rem">Missed appointments ÷ Total appointments × 100</div>
+        <div style="display:flex;gap:8px;margin-top:.75rem;flex-wrap:wrap">
+          <span class="ns-delta delta-up"><i class="ti ti-arrow-right" aria-hidden="true"></i> Baseline: 40%</span>
+          <span class="ns-delta delta-down"><i class="ti ti-arrow-down" aria-hidden="true"></i> Target: 30% in 6 months</span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:.25rem">Recovery per salon / week</div>
+        <div style="font-size:28px;font-weight:500;color:var(--text-primary);font-family:var(--font-voice)">₹4,000</div>
+        <div style="font-size:12px;color:var(--text-secondary)">~₹2.08L per year at 50 appts/wk @ ₹800 avg</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="section-label">Primary KPIs</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Reminder engagement rate</div>
+      <div class="kpi-val">—</div>
+      <div class="kpi-target">Target: 60%</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-blue" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Appointment attendance rate</div>
+      <div class="kpi-val">60%</div>
+      <div class="kpi-target">Target: +10% increase → 70%</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-teal" style="width:60%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Delay update delivery rate</div>
+      <div class="kpi-val">—</div>
+      <div class="kpi-target">Target: 95%</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-blue" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Reschedule-via-delay rate</div>
+      <div class="kpi-val">0%</div>
+      <div class="kpi-target">Target: 70% (of 60+ min delays)</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-amber" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pre-payment adoption rate</div>
+      <div class="kpi-val">0%</div>
+      <div class="kpi-target">Target: 55% of eligible bookings</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-violet" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Priority on-time rate</div>
+      <div class="kpi-val">—</div>
+      <div class="kpi-target">Target: 90% within 5 min</div>
+      <div class="kpi-bar"><div class="kpi-fill fill-teal" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="section-label">Feature-level metrics</div>
+  <div class="feature-row">
+    <div class="f-card">
+      <div class="f-header">
+        <div class="f-icon fi-blue"><i class="ti ti-bell" aria-hidden="true"></i></div>
+        <div class="f-name">Reminder system</div>
+      </div>
+      <div class="divider"></div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Activation</div>
+        <div class="f-metric-val">Booking confirmed</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Leading indicator</div>
+        <div class="f-metric-val">Msg open / tap rate</div>
+        <div class="f-target">Target: 60% engagement</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Lagging indicator</div>
+        <div class="f-metric-val">Attended after reminder</div>
+        <div class="f-target">Attendance uplift vs baseline</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Drop-off signal</div>
+        <div class="f-metric-val">Delivery failure rate</div>
+        <div class="f-target">Alert if &gt; 5%</div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-header">
+        <div class="f-icon fi-teal"><i class="ti ti-clock" aria-hidden="true"></i></div>
+        <div class="f-name">Live delay tracker</div>
+      </div>
+      <div class="divider"></div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Activation</div>
+        <div class="f-metric-val">T-2h update sent</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Leading indicator</div>
+        <div class="f-metric-val">Update delivery rate</div>
+        <div class="f-target">Target: 95%</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Lagging indicator</div>
+        <div class="f-metric-val">Reschedule-via-delay</div>
+        <div class="f-target">Target: 70% of 60+ min delays</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Drop-off signal</div>
+        <div class="f-metric-val">No-action after 60 min</div>
+        <div class="f-target">Customer likely to no-show</div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-header">
+        <div class="f-icon fi-amber"><i class="ti ti-currency-rupee" aria-hidden="true"></i></div>
+        <div class="f-name">Pre-payment (optional)</div>
+      </div>
+      <div class="divider"></div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Activation</div>
+        <div class="f-metric-val">Pre-pay CTA seen at booking</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Leading indicator</div>
+        <div class="f-metric-val">Pre-pay click-through</div>
+        <div class="f-target">CTA → Razorpay checkout</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Lagging indicator</div>
+        <div class="f-metric-val">Adoption + on-time rate</div>
+        <div class="f-target">55% adoption · 90% on-time</div>
+      </div>
+      <div class="f-metric-row">
+        <div class="f-metric-label">Drop-off signal</div>
+        <div class="f-metric-val">Payment abandoned / failed</div>
+        <div class="f-target">Slot hold expiry rate</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="section-label">Customer journey funnel</div>
+  <div style="background:var(--surface-1);border-radius:12px;border:0.5px solid var(--border);padding:1.25rem">
+    <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:4px;align-items:end;margin-bottom:1rem">
+      <div class="funnel-step" style="grid-column:1">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-pct">100%</div>
+          <div class="funnel-bar" style="height:80px;background:#2a78d6;opacity:.85"></div>
+        </div>
+        <div class="funnel-label">Booking<br>created</div>
+      </div>
+      <div class="funnel-arrow" style="grid-column:2"><i class="ti ti-chevron-right" aria-hidden="true"></i></div>
+      <div class="funnel-step" style="grid-column:3">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-pct">95%</div>
+          <div class="funnel-bar" style="height:76px;background:#2a78d6;opacity:.75"></div>
+        </div>
+        <div class="funnel-label">Reminder<br>delivered</div>
+      </div>
+      <div class="funnel-arrow" style="grid-column:4"><i class="ti ti-chevron-right" aria-hidden="true"></i></div>
+      <div class="funnel-step" style="grid-column:5">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-pct">60%</div>
+          <div class="funnel-bar" style="height:48px;background:#1baf7a;opacity:.85"></div>
+        </div>
+        <div class="funnel-label">Reminder<br>engaged</div>
+      </div>
+      <div class="funnel-arrow" style="grid-column:6"><i class="ti ti-chevron-right" aria-hidden="true"></i></div>
+      <div class="funnel-step" style="grid-column:7">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-pct">70%</div>
+          <div class="funnel-bar" style="height:56px;background:#eda100;opacity:.85"></div>
+        </div>
+        <div class="funnel-label">Shows up /<br>reschedules</div>
+      </div>
+      <div class="funnel-arrow" style="grid-column:8"><i class="ti ti-chevron-right" aria-hidden="true"></i></div>
+      <div class="funnel-step" style="grid-column:9">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-pct">30%</div>
+          <div class="funnel-bar" style="height:24px;background:#e34948;opacity:.75"></div>
+        </div>
+        <div class="funnel-label">No-show<br>(target)</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text-muted)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#2a78d6;display:inline-block"></span>Reminder flow</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#1baf7a;display:inline-block"></span>Engagement</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#eda100;display:inline-block"></span>Attendance / reschedule</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#e34948;display:inline-block"></span>No-show rate</span>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="section-label">Retention signals</div>
+  <div style="background:var(--surface-1);border-radius:12px;border:0.5px solid var(--border);padding:1.25rem">
+    <div class="timeline-row">
+      <div class="t-period">Day 1</div>
+      <div class="t-events">
+        <span class="t-event">Booking confirmed</span>
+        <span class="t-event">Confirmation msg sent (&lt;60s)</span>
+        <span class="t-event">Pre-pay CTA shown</span>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="t-period">T-24h</div>
+      <div class="t-events">
+        <span class="t-event">Reminder 1 sent</span>
+        <span class="t-event">Customer opens / taps</span>
+        <span class="t-event">Reschedule / cancel available</span>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="t-period">T-2h</div>
+      <div class="t-events">
+        <span class="t-event">Reminder 2 + delay update (merged)</span>
+        <span class="t-event">Delay status check begins</span>
+        <span class="t-event">Every 30-min cadence starts</span>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="t-period">T-1h</div>
+      <div class="t-events">
+        <span class="t-event">Reminder 3 + delay update (merged)</span>
+        <span class="t-event">Cadence increases to 15 min</span>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="t-period">T-30m</div>
+      <div class="t-events">
+        <span class="t-event">Reminder 4 (optional — salon opt-in)</span>
+        <span class="t-event">Priority reassurance if pre-paid</span>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="t-period">60+ min delay</div>
+      <div class="t-events">
+        <span class="t-event">Reschedule CTA triggered</span>
+        <span class="t-event">Slot released on accept</span>
+        <span class="t-event">Discount honored on reschedule</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="section-label">Drop-off & risk signals</div>
+  <div class="risk-row">
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-message-off" aria-hidden="true" style="color:var(--text-danger)"></i></div>
+      <div>
+        <div class="badge badge-danger">High impact</div>
+        <div class="risk-title">WhatsApp delivery failure</div>
+        <div class="risk-desc">Retry up to 2× over 10 min. Log failures. Alert if delivery rate drops below 95%.</div>
+      </div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-credit-card-off" aria-hidden="true" style="color:var(--text-warning)"></i></div>
+      <div>
+        <div class="badge badge-warning">Medium impact</div>
+        <div class="risk-title">Payment abandon / failure</div>
+        <div class="risk-desc">Slot held 10 min then auto-released. Track checkout → paid conversion rate; high abandon rate signals friction.</div>
+      </div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-clock-x" aria-hidden="true" style="color:var(--text-danger)"></i></div>
+      <div>
+        <div class="badge badge-danger">High impact</div>
+        <div class="risk-title">No action after 60+ min delay</div>
+        <div class="risk-desc">Customer ignores reschedule CTA. Strong no-show predictor. Track reschedule-via-delay rate vs 70% target.</div>
+      </div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-alert-triangle" aria-hidden="true" style="color:var(--text-warning)"></i></div>
+      <div>
+        <div class="badge badge-warning">Medium impact</div>
+        <div class="risk-title">Inaccurate delay estimates</div>
+        <div class="risk-desc">Salon not marking appts started/completed. Degrades tracker quality. Track estimate accuracy within ±5 min.</div>
+      </div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-users-group" aria-hidden="true" style="color:var(--text-warning)"></i></div>
+      <div>
+        <div class="badge badge-warning">Medium impact</div>
+        <div class="risk-title">Low salon adoption</div>
+        <div class="risk-desc">Staff resistance or misconfiguration reduces feature utilization. Track % of salons with all 3 features enabled.</div>
+      </div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-icon"><i class="ti ti-discount-off" aria-hidden="true" style="color:var(--text-secondary)"></i></div>
+      <div>
+        <div class="badge badge-success">Low impact</div>
+        <div class="risk-title">Pre-pay + frequent reschedule</div>
+        <div class="risk-desc">Discount exploited without genuine commitment. Monitor reschedule rate for pre-paid cohort vs standard cohort.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
